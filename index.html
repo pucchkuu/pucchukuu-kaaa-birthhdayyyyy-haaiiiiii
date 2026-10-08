@@ -1,0 +1,1875 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Our Little Story — Pucchkuu & Pucchkii</title>
+
+<style>
+:root{
+  --pink:#e9b8c9;
+  --lilac:#b8a2d3;
+  --paper:#f6eee8;
+  --dark:#141117;
+  --muted:#d9cadb;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  font-family:Georgia,"Times New Roman",serif;
+  background:#100d13;
+  color:#fff;
+}
+
+body{
+  overflow-x:hidden;
+}
+
+button{
+  font:inherit;
+}
+
+.app{
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:18px;
+  background:
+    radial-gradient(circle at 50% 15%,#38283e 0,#17131a 45%,#0b090d 100%);
+}
+
+.book{
+  width:min(1120px,100%);
+  min-height:92vh;
+  position:relative;
+}
+
+.topbar{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:50;
+  padding:5px 2px;
+}
+
+.brand{
+  font:700 11px system-ui;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:#f4dce6;
+}
+
+.controls{
+  display:flex;
+  gap:8px;
+}
+
+.ctrl{
+  border:1px solid #ffffff25;
+  background:#ffffff0c;
+  color:#fff;
+  border-radius:999px;
+  padding:8px 12px;
+  cursor:pointer;
+  font:600 12px system-ui;
+}
+
+.stage{
+  position:relative;
+  min-height:720px;
+  display:grid;
+  place-items:center;
+  padding:50px 0 70px;
+}
+
+.page{
+  position:absolute;
+  inset:48px 0 70px;
+  display:grid;
+  place-items:center;
+  opacity:0;
+  pointer-events:none;
+  transform:translateX(35px) scale(.98);
+  transition:opacity .45s ease,transform .5s ease;
+}
+
+.page.active{
+  opacity:1;
+  pointer-events:auto;
+  transform:none;
+}
+
+.pageFrame{
+  position:relative !important;
+  width:min(1000px,96vw) !important;
+  height:min(650px,calc(100vh - 175px)) !important;
+  min-height:520px !important;
+  display:grid !important;
+  grid-template-columns:45% 55% !important;
+  overflow:hidden !important;
+  border-radius:20px !important;
+  background:#120e16 !important;
+  box-shadow:0 30px 90px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.08) !important;
+  isolation:isolate !important;
+}
+
+/* PHOTO — LEFT SIDE ONLY, FADED */
+.pageFrame .photoBg{
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  width:45% !important;
+  z-index:1 !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+}
+
+.pageFrame .photoBg img{
+  position:absolute !important;
+  inset:0 !important;
+  width:100% !important;
+  height:100% !important;
+  max-width:none !important;
+  max-height:none !important;
+  object-fit:cover !important;
+  object-position:center !important;
+  display:block !important;
+  opacity:.55 !important;
+  filter:brightness(.72) saturate(.78) !important;
+  transform:scale(1.02) !important;
+}
+
+/* Fading edge into the text area */
+.pageFrame .photoShade{
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  width:52% !important;
+  z-index:2 !important;
+  pointer-events:none !important;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(10,7,14,.04) 0%,
+      rgba(10,7,14,.08) 58%,
+      rgba(18,14,22,.98) 100%
+    ) !important;
+}
+
+/* WEBSITE TEXT — RIGHT SIDE, NEVER BEHIND PHOTO */
+.pageFrame > .pageText{
+  position:absolute !important;
+  left:45% !important;
+  right:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  z-index:50 !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:center !important;
+
+  padding:42px 42px !important;
+  overflow-y:auto !important;
+
+  background:#100c15 !important;
+  color:#fff !important;
+  text-align:center !important;
+
+  border-left:1px solid rgba(255,255,255,.10) !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+.pageFrame > .pageText .chapter,
+.pageFrame > .pageText h2,
+.pageFrame > .pageText p{
+  position:relative !important;
+  z-index:51 !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+.pageFrame > .pageText .chapter{
+  color:#f1b8d0 !important;
+  margin-bottom:12px !important;
+}
+
+.pageFrame > .pageText h2{
+  color:#fff !important;
+  text-shadow:0 2px 12px rgba(0,0,0,.85) !important;
+}
+
+.pageFrame > .pageText p{
+  color:#f8eff7 !important;
+  text-shadow:0 2px 10px rgba(0,0,0,.75) !important;
+  white-space:pre-line !important;
+}
+
+/* INTERACTIVE BUTTONS / REVEALS */
+.pageFrame > .hotspot{
+  z-index:120 !important;
+}
+
+.pageFrame > .reveal{
+  position:absolute !important;
+  left:45% !important;
+  right:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  z-index:200 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:35px !important;
+  background:#100c15 !important;
+}
+
+.pageFrame > .reveal .box{
+  max-width:620px !important;
+  width:100% !important;
+  max-height:90% !important;
+  overflow:auto !important;
+  background:#19131f !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.15) !important;
+  border-radius:20px !important;
+  padding:28px !important;
+  box-shadow:0 20px 60px rgba(0,0,0,.65) !important;
+}
+
+/* FINAL PAGE CONTENT */
+.pageFrame .final20{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:60 !important;
+  display:grid !important;
+  grid-template-columns:45% 55% !important;
+}
+
+.pageFrame .final20bg{
+  position:absolute !important;
+  left:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  width:45% !important;
+  z-index:1 !important;
+  background:transparent !important;
+}
+
+.pageFrame .final20content{
+  position:absolute !important;
+  left:45% !important;
+  right:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  z-index:100 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  justify-content:center !important;
+  align-items:center !important;
+  text-align:center !important;
+  padding:40px !important;
+  background:#100c15 !important;
+}
+
+.pageFrame .final20content .finalButton{
+  position:relative !important;
+  z-index:150 !important;
+  cursor:pointer !important;
+}
+
+/* FINAL REVEAL — opens reliably on top of everything */
+.pageFrame > .finalReveal{
+  position:absolute !important;
+  left:45% !important;
+  right:0 !important;
+  top:0 !important;
+  bottom:0 !important;
+  z-index:500 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  padding:30px !important;
+  background:#100c15 !important;
+  overflow:auto !important;
+}
+
+.pageFrame > .finalReveal .finalCard{
+  width:100% !important;
+  max-width:650px !important;
+  max-height:92% !important;
+  overflow:auto !important;
+  box-sizing:border-box !important;
+  padding:30px !important;
+  border-radius:22px !important;
+  background:#19131f !important;
+  color:#fff !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+  box-shadow:0 25px 70px rgba(0,0,0,.75) !important;
+  text-align:center !important;
+}
+
+.pageFrame > .finalReveal .story,
+.pageFrame > .finalReveal .ending{
+  white-space:pre-line !important;
+}
+
+@media(max-width:700px){
+  .pageFrame{
+    width:96vw !important;
+    height:calc(100vh - 175px) !important;
+    min-height:520px !important;
+    grid-template-columns:1fr !important;
+  }
+
+  .pageFrame .photoBg{
+    width:100% !important;
+    height:42% !important;
+    bottom:auto !important;
+  }
+
+  .pageFrame .photoShade{
+    width:100% !important;
+    height:50% !important;
+    bottom:auto !important;
+    background:linear-gradient(
+      180deg,
+      rgba(10,7,14,.05),
+      rgba(18,14,22,.98)
+    ) !important;
+  }
+
+  .pageFrame > .pageText{
+    left:0 !important;
+    right:0 !important;
+    top:34% !important;
+    bottom:0 !important;
+    padding:24px 18px !important;
+    border-left:0 !important;
+    border-top:1px solid rgba(255,255,255,.10) !important;
+  }
+
+  .pageFrame > .reveal,
+  .pageFrame > .finalReveal{
+    left:0 !important;
+    top:34% !important;
+    padding:18px !important;
+  }
+
+  .pageFrame .final20content{
+    left:0 !important;
+    top:34% !important;
+    padding:24px 18px !important;
+  }
+
+  .pageFrame .final20bg{
+    width:100% !important;
+    height:42% !important;
+  }
+}
+
+.noPhoto{
+  width:100%;
+  height:100%;
+  min-height:500px;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  padding:35px;
+}
+
+.noPhotoInner{
+  max-width:650px;
+}
+
+.noPhoto .chapter{
+  font:800 11px system-ui;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  color:var(--pink);
+  margin-bottom:15px;
+}
+
+.noPhoto h2{
+  margin:0 0 15px;
+  font-size:clamp(30px,6vw,60px);
+  font-weight:400;
+  color:#fff7fa;
+}
+
+.noPhoto p{
+  white-space:pre-line;
+  color:#e5dce5;
+  line-height:1.75;
+  font-size:clamp(15px,2.3vw,19px);
+  max-width:650px;
+  margin:auto;
+}
+
+.nav{
+  position:absolute;
+  bottom:5px;
+  left:0;
+  right:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  z-index:40;
+}
+
+.navbtn{
+  border:1px solid #ffffff28;
+  background:#ffffff10;
+  color:#fff;
+  border-radius:999px;
+  padding:10px 18px;
+  cursor:pointer;
+  font:700 13px system-ui;
+}
+
+.navbtn:disabled{
+  opacity:.3;
+  cursor:default;
+}
+
+.counter{
+  font:700 12px system-ui;
+  letter-spacing:.14em;
+  color:#d9cadb;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:#09070bdf;
+  z-index:100;
+  display:grid;
+  place-items:center;
+  padding:24px;
+  transition:opacity .45s;
+}
+
+.overlay.hidden{
+  opacity:0;
+  pointer-events:none;
+}
+
+.welcome{
+  width:min(560px,100%);
+  text-align:center;
+  padding:42px 26px;
+  border:1px solid #ffffff18;
+  border-radius:28px;
+  background:linear-gradient(145deg,#ffffff0d,#ffffff04);
+  backdrop-filter:blur(18px);
+  box-shadow:0 30px 100px #0009;
+}
+
+.eyebrow{
+  font:700 11px system-ui;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  color:#e9bdd0;
+}
+
+.welcome h1{
+  font-size:clamp(40px,8vw,76px);
+  line-height:.95;
+  margin:16px 0;
+  color:#fff5f7;
+  font-weight:400;
+}
+
+.welcome p{
+  font-size:17px;
+  line-height:1.6;
+  color:#d9cfd8;
+  margin:18px auto 28px;
+  max-width:440px;
+}
+
+.start{
+  border:0;
+  background:linear-gradient(135deg,#e6b6c9,#bba5d5);
+  color:#241b27;
+  border-radius:999px;
+  padding:14px 25px;
+  font:800 14px system-ui;
+  cursor:pointer;
+  box-shadow:0 10px 35px #d5abc955;
+}
+
+.hotspot{
+  position:absolute;
+  z-index:8;
+  cursor:pointer;
+  border-radius:50%;
+  border:1px solid #ffffff70;
+  background:#ffffff18;
+  box-shadow:0 0 0 0 #f5c9d855;
+  animation:pulse 1.8s infinite;
+  width:54px;
+  height:54px;
+  display:grid;
+  place-items:center;
+  color:#fff;
+  font:700 21px system-ui;
+}
+
+.hotspot small{
+  position:absolute;
+  top:62px;
+  white-space:nowrap;
+  font:700 10px system-ui;
+  color:#fff;
+  background:#211a25e8;
+  padding:6px 9px;
+  border-radius:8px;
+}
+
+.h3{left:43%;top:45%}
+.h6{left:54%;top:50%}
+.h8{right:10%;top:22%}
+.h13{left:44%;top:55%}
+.h14{right:17%;top:61%}
+.h15{left:47%;top:50%}
+.h16{left:51%;top:50%}
+.h17{left:50%;top:48%}
+.h19{left:50%;top:50%}
+.h20{left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:64px}
+
+@keyframes pulse{
+  50%{
+    box-shadow:0 0 0 13px #f5c9d800;
+  }
+}
+
+.reveal{
+  position:absolute;
+  inset:7%;
+  z-index:20;
+  display:none;
+  place-items:center;
+  background:#17111eea;
+  backdrop-filter:blur(12px);
+  border-radius:22px;
+  padding:24px;
+  text-align:center;
+  color:#fff;
+  overflow:auto;
+}
+
+.reveal.show{
+  display:grid;
+}
+
+.reveal .box{
+  width:min(620px,100%);
+  border:1px solid #ffffff20;
+  background:#ffffff0c;
+  border-radius:22px;
+  padding:28px;
+  box-shadow:0 25px 80px #0008;
+}
+
+.reveal h3{
+  margin:0 0 15px;
+  font-size:clamp(24px,5vw,36px);
+  font-weight:400;
+  color:#fff5f8;
+}
+
+.reveal p{
+  line-height:1.75;
+  margin:0;
+  color:#eee4ee;
+  font-size:15px;
+  white-space:pre-line;
+}
+
+.close{
+  margin-top:22px;
+  border:1px solid #ffffff30;
+  background:#ffffff12;
+  color:#fff;
+  border-radius:999px;
+  padding:10px 16px;
+  cursor:pointer;
+  font:700 12px system-ui;
+}
+
+.sparkles{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+
+.sparkles i{
+  position:absolute;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#fff;
+  opacity:.35;
+  animation:float 7s linear infinite;
+}
+
+@keyframes float{
+  from{
+    transform:translateY(105vh);
+    opacity:0;
+  }
+  20%{opacity:.45}
+  to{
+    transform:translateY(-10vh);
+    opacity:0;
+  }
+}
+
+/* FINAL PAGE */
+
+.final20{
+  width:100%;
+  min-height:500px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+  background:transparent;
+}
+
+.final20bg{
+  position:absolute;
+  inset:0;
+  opacity:.5;
+  background-image:
+    radial-gradient(circle,#fff 1px,transparent 2px);
+  background-size:95px 95px;
+}
+
+.final20content{
+  position:relative;
+  z-index:2;
+  text-align:center;
+  padding:30px;
+  max-width:720px;
+}
+
+.final20chapter{
+  font:800 10px system-ui;
+  letter-spacing:.3em;
+  text-transform:uppercase;
+  color:#e9bdd0;
+  margin-bottom:15px;
+}
+
+.final20content h1{
+  font-size:clamp(34px,7vw,70px);
+  font-weight:400;
+  line-height:1;
+  margin:0 0 18px;
+  color:#fff7fa;
+}
+
+.final20content p{
+  color:#e8dce7;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.finalButton{
+  border:1px solid #f4c8dc66;
+  background:linear-gradient(135deg,#f2c6d9,#c6b2e0);
+  color:#241a28;
+  border-radius:999px;
+  padding:14px 25px;
+  cursor:pointer;
+  font:800 13px system-ui;
+  margin-top:15px;
+}
+
+.finalReveal{
+  position:absolute;
+  inset:0;
+  z-index:30;
+  display:none;
+  place-items:center;
+  padding:20px;
+  background:linear-gradient(135deg,#100d14f7,#24192df7);
+  backdrop-filter:blur(15px);
+  overflow:auto;
+}
+
+.finalReveal.show{
+  display:grid;
+}
+
+.finalCard{
+  width:min(650px,100%);
+  max-height:92%;
+  overflow:auto;
+  text-align:center;
+  padding:34px 26px;
+  border:1px solid #ffffff1c;
+  border-radius:28px;
+  background:linear-gradient(145deg,#ffffff10,#ffffff04);
+  box-shadow:0 25px 90px #000a;
+}
+
+.finalCard .chapter{
+  font:800 10px system-ui;
+  letter-spacing:.3em;
+  color:#e9bdd0;
+  text-transform:uppercase;
+}
+
+.finalCard h2{
+  margin:12px 0;
+  font-size:clamp(28px,6vw,52px);
+  font-weight:400;
+}
+
+.birthday{
+  font-size:clamp(19px,4vw,31px);
+  line-height:1.3;
+  color:#f6c8da;
+  margin:18px 0 25px;
+}
+
+.story{
+  white-space:pre-line;
+  font-size:clamp(15px,2.2vw,18px);
+  line-height:1.8;
+  color:#eee3eb;
+}
+
+.ending{
+  white-space:pre-line;
+  margin:22px auto;
+  color:#f2dce8;
+  font-style:italic;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.finalClose{
+  border:1px solid #ffffff2b;
+  background:#ffffff0b;
+  color:#fff;
+  border-radius:999px;
+  padding:10px 17px;
+  cursor:pointer;
+  font:700 12px system-ui;
+}
+
+@media(max-width:700px){
+
+  .app{
+    padding:8px;
+  }
+
+  .book{
+    min-height:96vh;
+  }
+
+  .stage{
+    min-height:650px;
+    padding:50px 0 72px;
+  }
+
+  .page{
+    inset:50px 0 72px;
+  }
+
+  .pageFrame{
+    min-height:540px;
+    width:98vw;
+  }
+
+  .pageFrame img{
+    max-width:96vw;
+    max-height:calc(100vh - 185px);
+  }
+
+  .brand{
+    font-size:9px;
+  }
+
+  .ctrl{
+    padding:7px 9px;
+  }
+
+  .nav{
+    gap:8px;
+  }
+
+  .navbtn{
+    padding:10px 13px;
+  }
+
+  .hotspot{
+    width:46px;
+    height:46px;
+  }
+
+  .h3{left:38%;top:44%}
+  .h6{left:48%;top:49%}
+  .h8{right:8%;top:20%}
+  .h13{left:40%;top:54%}
+  .h14{right:14%;top:59%}
+  .h15{left:44%;top:49%}
+  .h16{left:48%;top:49%}
+  .h17{left:47%;top:47%}
+  .h19{left:47%;top:49%}
+
+  .pageText{
+    bottom:12px;
+    left:10px;
+    right:10px;
+    padding:14px;
+  }
+
+  .pageText p{
+    font-size:12px;
+  }
+
+  .welcome{
+    padding:34px 20px;
+  }
+
+  .welcome p{
+    font-size:15px;
+  }
+
+  .reveal{
+    inset:5%;
+  }
+
+  .reveal .box{
+    padding:22px 17px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sparkles" id="sparkles"></div>
+
+<div class="app">
+<main class="book">
+
+<header class="topbar">
+  <div class="brand">OUR LITTLE STORY · 20 CHAPTERS</div>
+  <div class="controls">
+    <button class="ctrl" id="musicBtn">♪ Start</button>
+    <button class="ctrl" id="muteBtn">🔊</button>
+  </div>
+</header>
+
+<section class="stage" id="stage"></section>
+
+<nav class="nav">
+  <button class="navbtn" id="prev">← Back</button>
+  <div class="counter" id="counter">01 / 20</div>
+  <button class="navbtn" id="next">Next →</button>
+</nav>
+
+</main>
+</div>
+
+<div class="overlay" id="welcome">
+
+<div class="welcome">
+
+<div class="eyebrow">a little thing I made for you</div>
+
+<h1>Our Little Story</h1>
+
+<p>
+20 little chapters. Some memories, some chaos, some feelings…
+and a few things you have to discover yourself.
+</p>
+
+<button class="start" id="start">
+Open our story ♡
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+/* =========================
+   PHOTOS
+========================= */
+
+const pages=[];
+
+for(let i=1;i<=20;i++){
+
+  const n=String(i).padStart(2,"0");
+
+  pages.push([
+    "photos/page"+n+".jpg",
+    "photos/page"+n+".JPG",
+    "photos/page"+n+".jpeg",
+    "photos/page"+n+".JPEG",
+    "artwork/page"+n+".jpg",
+    "artwork/page"+n+".JPG",
+    "artwork/page"+n+".jpeg",
+    "artwork/page"+n+".JPEG"
+  ]);
+}
+
+
+/* =========================
+   MUSIC
+========================= */
+
+const tracks={
+  1:"music/01_indila-love-story.mp3",
+  2:"music/02_until-i-found-you.mp3",
+  5:"music/03_im-yours.mp3",
+  8:"music/04_levitating.mp3",
+  9:"music/05_make-you-mine.mp3",
+  12:"music/06_dandelions.mp3",
+  15:"music/07_harleys-in-hawaii.mp3",
+  16:"music/08_sad-girl.mp3",
+  17:"music/09_i-wanna-be-yours.mp3",
+  19:"music/10_love-money-sex-drugs-etc.mp3",
+  20:"music/11_love-story-ending.mp3"
+};
+
+
+/* =========================
+   STORY TEXT
+========================= */
+
+const story={
+
+1:{
+title:"Where Our Story Begins",
+text:"Before the promises, the rings, the distance and all the chaos… there was just you and me.\n\nA little story that had no idea how beautiful it was going to become. ♡"
+},
+
+2:{
+title:"IPEC — 2022",
+text:"At first, you were just a friend.\n\nSomewhere in the middle of all that ordinary friendship, there was a little crush… even though neither of us knew what this story would become."
+},
+
+3:{
+title:"The Crush",
+text:"There was a tiny problem though… my friend liked you too.\n\nSo I stopped looking at you that way and decided you were simply my friend.\n\nFunny how life had other plans. ♡"
+},
+
+4:{
+title:"And then you left…",
+text:"You left coaching, and for a while it honestly felt like that might be the end of our little story.\n\nBut apparently our story had other plans."
+},
+
+5:{
+title:"That Random Day",
+text:"One completely random day, you asked your friend for my Instagram ID.\n\nI gave it to you.\n\nAnd somehow, that tiny little thing changed everything."
+},
+
+6:{
+title:"Talking Again",
+text:"One conversation became another.\n\nThen another.\n\nAnd slowly, talking to you stopped feeling random. It started feeling natural."
+},
+
+7:{
+title:"Slowly, Slowly…",
+text:"There was no single dramatic moment.\n\nWe just kept talking, laughing, sharing little things and getting closer without even realizing how much we were becoming a part of each other's lives."
+},
+
+8:{
+title:"Okay… THIS conversation 😭",
+text:"You really asked:\n\n“Bache paida kro gi mere sath?”\n\nAnd my reaction was basically:\n“Mazak tho nhi kr rhe na? Rxn dekhne k liye?”\n\nThen:\n“Fuck!! Jane do.”\n\nAnd finally…\n\n“Tum pasand ho humko, cricket team bana le g.”\n\nSomewhere in all that chaos, things became very real. 😭❤️"
+},
+
+9:{
+title:"08 May 2024",
+text:"And then came the date that changed everything.\n\n08 May 2024.\n\nWe became us.\n\nNot perfect. Not predictable. Just ours."
+},
+
+10:{
+title:"DPS Days",
+text:"Same school.\nSame corridors.\nSame little glances.\n\nSometimes you would come to see me for just a few seconds during lunch.\n\nAnd somehow those few seconds could make an entire day better."
+},
+
+11:{
+title:"Secret Meetings & Scooty Rides",
+text:"Those after-school moments became some of my favourite memories.\n\nA little misty rain. School uniforms. Going somewhere outside after school.\n\nMe sitting behind you, hugging you while you rode the scooty.\n\nSimple moments… but somehow they became everything."
+},
+
+12:{
+title:"Your 2025 Birthday",
+text:"Your birthday became another little chapter of us.\n\nA gift. A memory. A day I wanted to make special for you.\n\nAnd somewhere inside that birthday came something much more meaningful."
+},
+
+13:{
+title:"Promise Ring #1",
+text:"Your 2025 birthday.\n\nI gave you a promise ring.\n\nOne little ring carrying a very big feeling:\nI wanted us to keep choosing each other. ♡"
+},
+
+14:{
+title:"Promise Ring #2",
+text:"February 2026 — our farewell.\n\nWe promised each other that we would stay together, no matter how life changes.\n\nThis ring was never meant to be the final one.\n\nOne day, it will be replaced by an engagement ring… and then by a wedding ring.\n\nTwo little promises today, a lifetime we are choosing for tomorrow. ♡"
+},
+
+15:{
+title:"Long Distance",
+text:"And then the map changed.\n\nDifferent places.\nDifferent routines.\nMore distance.\n\nBut distance changed the map, not the meaning.\n\nYou were still you.\nI was still me.\nAnd we were still us."
+},
+
+16:{
+title:"The Difficult Chapter",
+text:"We had fights.\nMisunderstandings.\nSilence.\nHard days.\nAnd yes… we even broke apart for a while.\n\nIt hurt.\n\nBut somehow, even after all of that, we still cared enough to find our way back."
+},
+
+17:{
+title:"Putting Us Back Together",
+text:"We didn't simply go back to who we were.\n\nWe learned.\nWe understood more.\nWe noticed the little efforts.\nWe made adjustments.\n\nAnd slowly, we learned how to be better for each other."
+},
+
+18:{
+title:"Growing Together",
+text:"Two people can love each other and still have things to learn.\n\nWe've learned that love isn't only the cute moments.\n\nIt's patience.\nUnderstanding.\nEffort.\nChoosing each other again.\n\nAnd that's what makes this story ours."
+},
+
+19:{
+title:"The Last Secret",
+text:"You made it this far…\n\nSo there is no password this time.\nJust one last little thing I want you to remember.\n\n08 MAY 2024\n\nThe date that changed everything.\n\nWe didn't know then how many memories, laughs, fights, distance, misunderstandings and little moments would come after it.\n\nBut somehow, we're still here.\n\nAnd this is only the beginning. ♡"
+}
+
+};
+
+
+/* =========================
+   VARIABLES
+========================= */
+
+let current=1;
+let started=false;
+let muted=false;
+let audio=new Audio();
+
+const stage=document.getElementById("stage");
+
+
+/* =========================
+   MAKE PAGES
+========================= */
+
+function makePages(){
+
+  for(let i=1;i<=20;i++){
+
+    const page=document.createElement("article");
+
+    page.className="page";
+
+    if(i===1){
+      page.classList.add("active");
+    }
+
+    page.dataset.page=i;
+
+    const frame=document.createElement("div");
+
+    frame.className="pageFrame";
+
+
+    /* FINAL PAGE */
+
+    if(i===20){
+
+      const finalPhotoBg=document.createElement("div");
+      finalPhotoBg.className="photoBg";
+
+      const finalImg=document.createElement("img");
+      finalImg.alt="Our Little Story — chapter 20";
+
+      let finalPhotoIndex=0;
+      const finalPhotos=pages[i-1];
+      finalImg.src=finalPhotos[finalPhotoIndex];
+
+      finalImg.onerror=function(){
+        finalPhotoIndex++;
+        if(finalPhotoIndex < finalPhotos.length){
+          finalImg.src=finalPhotos[finalPhotoIndex];
+        }else{
+          finalPhotoBg.style.display="none";
+        }
+      };
+
+      finalPhotoBg.appendChild(finalImg);
+      frame.appendChild(finalPhotoBg);
+
+      const finalShade=document.createElement("div");
+      finalShade.className="photoShade";
+      frame.appendChild(finalShade);
+
+      const finalWrap=document.createElement("div");
+      finalWrap.className="final20";
+
+      finalWrap.innerHTML=`
+        <div class="final20bg"></div>
+
+        <div class="final20content">
+          <div class="final20chapter">
+            CHAPTER 20
+          </div>
+
+          <h1>
+            And this is only the beginning…
+          </h1>
+
+          <p>
+            Some things are better read when you choose to open them. ♡
+          </p>
+
+          <button class="finalButton" id="finalOpen">
+            One last thing… ♡
+          </button>
+        </div>
+      `;
+
+      frame.appendChild(finalWrap);
+
+      page.appendChild(frame);
+      stage.appendChild(page);
+
+      continue;
+    }
+
+
+    /* PHOTO */
+
+    const img=document.createElement("img");
+
+    img.alt="Our Little Story — chapter "+i;
+
+    let photoIndex=0;
+
+    img.src=pages[i-1][photoIndex];
+
+    img.onerror=function(){
+
+      photoIndex++;
+
+      if(photoIndex < pages[i-1].length){
+
+        img.src=pages[i-1][photoIndex];
+
+      }else{
+
+        showTextFallback(frame,i);
+
+      }
+
+    };
+
+    const photoBg=document.createElement("div");
+    photoBg.className="photoBg";
+
+    const photoShade=document.createElement("div");
+    photoShade.className="photoShade";
+
+    photoBg.appendChild(img);
+    frame.appendChild(photoBg);
+    frame.appendChild(photoShade);
+
+
+    /* STORY TEXT */
+
+    if(story[i]){
+
+      const text=document.createElement("div");
+
+      text.className="pageText";
+
+      text.innerHTML=`
+        <div class="chapter">chapter ${String(i).padStart(2,"0")}</div>
+        <h2>${story[i].title}</h2>
+        <p>${story[i].text}</p>
+      `;
+
+      frame.appendChild(text);
+
+    }
+
+
+    /* INTERACTIVE BUTTONS */
+
+    if([3,6,8,13,14,15,16,17,19].includes(i)){
+
+      addInteraction(frame,i);
+
+    }
+
+
+    page.appendChild(frame);
+
+    stage.appendChild(page);
+
+  }
+
+}
+
+
+/* =========================
+   FALLBACK IF PHOTO MISSING
+========================= */
+
+function showTextFallback(frame,n){
+
+  const old=frame.querySelector("img");
+
+  if(old){
+    old.style.display="none";
+  }
+
+  const fallback=document.createElement("div");
+
+  fallback.className="noPhoto";
+
+  const data=story[n] || {
+    title:"Our Little Story",
+    text:"A little memory from our story. ♡"
+  };
+
+  fallback.innerHTML=`
+    <div class="noPhotoInner">
+
+      <div class="chapter">
+        chapter ${String(n).padStart(2,"0")}
+      </div>
+
+      <h2>${data.title}</h2>
+
+      <p>${data.text}</p>
+
+    </div>
+  `;
+
+  frame.insertBefore(fallback,frame.firstChild);
+
+}
+
+
+/* =========================
+   INTERACTIONS
+========================= */
+
+function addInteraction(frame,n){
+
+  const button=document.createElement("button");
+
+  button.className="hotspot h"+n;
+
+  button.innerHTML="♡";
+
+  const labels={
+    3:"tap to reveal",
+    6:"open this",
+    8:"tap the message",
+    13:"open the ring",
+    14:"bring them together",
+    15:"tap the map",
+    16:"open the chapter",
+    17:"put us back together",
+    19:"open the secret"
+  };
+
+  const small=document.createElement("small");
+
+  small.textContent=labels[n];
+
+  button.appendChild(small);
+
+  button.onclick=function(){
+
+    interact(n,frame);
+
+  };
+
+  frame.appendChild(button);
+
+}
+
+
+/* =========================
+   INTERACTION CONTENT
+========================= */
+
+function interact(n,frame){
+
+  if(n===3){
+
+    reveal(
+      frame,
+      "The truth was never said out loud…",
+      "There was a crush hiding underneath all that “just friends” energy. ♡"
+    );
+
+    return;
+  }
+
+
+  if(n===6){
+
+    reveal(
+      frame,
+      "That random “hey” became many conversations.",
+      "One message turned into another… and somehow talking again started feeling natural."
+    );
+
+    return;
+  }
+
+
+  if(n===8){
+
+    reveal(
+      frame,
+      "Okay, this one is VERY specific 😭",
+      "“Tum pasand ho humko, cricket team bana le g.”\n\nSomewhere in all that chaos, I knew this was different."
+    );
+
+    return;
+  }
+
+
+  if(n===13){
+
+    reveal(
+      frame,
+      "Promise Ring #1",
+      "Your 2025 birthday.\n\nOne little ring.\nOne very big promise.\n\nA tiny symbol of something I wanted us to keep choosing. ♡"
+    );
+
+    return;
+  }
+
+
+  if(n===14){
+
+    reveal(
+      frame,
+      "Promise Ring #2",
+      "February 2026 — our farewell.\n\nWe promised each other that we would stay together, no matter how life changes.\n\nThis ring was never meant to be the final one.\n\nOne day, it will be replaced by an engagement ring… and then by a wedding ring.\n\nTwo little promises today, a lifetime we are choosing for tomorrow. ♡"
+    );
+
+    return;
+  }
+
+
+  if(n===15){
+
+    reveal(
+      frame,
+      "Different places. Same sky.",
+      "Long distance changed the map, not the meaning.\n\nNo matter how far apart we were, you were still my person."
+    );
+
+    return;
+  }
+
+
+  if(n===16){
+
+    reveal(
+      frame,
+      "The difficult chapter",
+      "Fights.\nMisunderstandings.\nSilence.\nA breakup.\n\nIt hurt.\n\nBut the story did not end there."
+    );
+
+    return;
+  }
+
+
+  if(n===17){
+
+    reveal(
+      frame,
+      "Put us back together",
+      "We didn't simply go back to who we were.\n\nWe learned how to understand each other better.\nWe noticed the small efforts.\nWe made adjustments.\n\nAnd slowly, we learned how to be better for each other. ♡"
+    );
+
+    return;
+  }
+
+
+  if(n===19){
+
+    reveal(
+      frame,
+      "The Last Secret",
+      "You made it this far…\n\nSo there is no password this time. Just one last little thing I want you to remember.\n\n08 MAY 2024\n\nThe date that changed everything.\n\nWe didn't know then how many memories, laughs, fights, distance, misunderstandings and little moments would come after it.\n\nBut somehow, we're still here.\n\nAnd this is only the beginning. ♡"
+    );
+
+    return;
+  }
+
+}
+
+
+/* =========================
+   REVEAL BOX
+========================= */
+
+function reveal(frame,title,text){
+
+  const old=frame.querySelector(".reveal");
+
+  if(old){
+    old.remove();
+  }
+
+  const box=document.createElement("div");
+
+  box.className="reveal show";
+
+  box.innerHTML=`
+    <div class="box">
+
+      <h3>${title}</h3>
+
+      <p>${text}</p>
+
+      <button class="close">
+        close ♡
+      </button>
+
+    </div>
+  `;
+
+  box.querySelector(".close").onclick=function(){
+
+    box.remove();
+
+  };
+
+  frame.appendChild(box);
+
+}
+
+
+/* =========================
+   FINAL PAGE
+========================= */
+
+function openFinal(){
+
+  const frame=document.querySelector('.page[data-page="20"] .pageFrame');
+
+  if(!frame){
+    return;
+  }
+
+  const old=frame.querySelector(".finalReveal");
+
+  if(old){
+    old.remove();
+  }
+
+  const revealBox=document.createElement("div");
+
+  revealBox.className="finalReveal show";
+  revealBox.style.display="flex";
+  revealBox.style.visibility="visible";
+  revealBox.style.opacity="1";
+  revealBox.style.pointerEvents="auto";
+
+  revealBox.innerHTML=`
+
+    <div class="finalCard">
+
+      <div class="chapter">
+        chapter 20 · the last little note
+      </div>
+
+      <h2>
+        And this is only the beginning…
+      </h2>
+
+      <div class="birthday">
+        Happy birthday mera baacha .
+      </div>
+
+      <div class="story">
+We've had easy days, difficult days, silly moments, fights, distance, misunderstandings, and so many little memories that only we understand.
+
+But after everything, here we are.
+
+And if I could go back to the beginning and somehow know everything that was waiting for us…
+
+I'd still choose you.
+
+Not because our story was perfect.
+But because it was ours.
+      </div>
+
+      <div style="font-size:30px;margin:20px 0;">
+        ♡
+      </div>
+
+      <div class="ending">
+Our story isn't ending here.
+We're just turning the page.
+      </div>
+
+      <button class="finalClose">
+        Read it again ♡
+      </button>
+
+    </div>
+
+  `;
+
+  revealBox.querySelector(".finalClose").onclick=function(){
+
+    revealBox.remove();
+
+  };
+
+  frame.appendChild(revealBox);
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function show(n){
+
+  if(n<1){
+    n=1;
+  }
+
+  if(n>20){
+    n=20;
+  }
+
+  document.querySelectorAll(".page").forEach(function(page){
+
+    page.classList.remove("active");
+
+  });
+
+  const target=document.querySelector(
+    '.page[data-page="'+n+'"]'
+  );
+
+  if(!target){
+    return;
+  }
+
+  target.classList.add("active");
+
+  current=n;
+
+  document.getElementById("counter").textContent=
+    String(n).padStart(2,"0")+" / 20";
+
+  document.getElementById("prev").disabled=(n===1);
+
+  document.getElementById("next").disabled=(n===20);
+
+  if(started){
+    switchTrack(n);
+  }
+
+}
+
+
+/* =========================
+   MUSIC
+========================= */
+
+function currentTrack(n){
+
+  const keys=Object.keys(tracks)
+    .map(Number)
+    .filter(function(k){
+      return k<=n;
+    });
+
+  if(keys.length===0){
+    return null;
+  }
+
+  const latest=Math.max.apply(null,keys);
+
+  return tracks[latest];
+
+}
+
+
+function switchTrack(n){
+
+  if(muted){
+    return;
+  }
+
+  const src=currentTrack(n);
+
+  if(!src){
+    return;
+  }
+
+  if(audio.src && audio.src.endsWith(src)){
+    return;
+  }
+
+  const newAudio=new Audio(src);
+
+  newAudio.loop=true;
+
+  newAudio.volume=.75;
+
+  newAudio.play()
+    .then(function(){
+
+      if(audio && !audio.paused){
+
+        audio.pause();
+
+      }
+
+      audio=newAudio;
+
+    })
+    .catch(function(){
+
+      /* browser may block autoplay */
+
+    });
+
+}
+
+
+function startMusic(){
+
+  if(!started){
+
+    started=true;
+
+    document.getElementById("musicBtn").textContent="♪ Playing";
+
+    switchTrack(current);
+
+    return;
+
+  }
+
+  if(audio.paused){
+
+    audio.play().catch(function(){});
+
+    document.getElementById("musicBtn").textContent="♪ Playing";
+
+  }else{
+
+    audio.pause();
+
+    document.getElementById("musicBtn").textContent="♪ Play";
+
+  }
+
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+document.getElementById("start").onclick=function(){
+
+  document.getElementById("welcome").classList.add("hidden");
+
+  startMusic();
+
+};
+
+
+document.getElementById("musicBtn").onclick=function(){
+
+  startMusic();
+
+};
+
+
+document.getElementById("muteBtn").onclick=function(){
+
+  muted=!muted;
+
+  if(muted){
+
+    audio.pause();
+
+    document.getElementById("muteBtn").textContent="🔇";
+
+  }else{
+
+    document.getElementById("muteBtn").textContent="🔊";
+
+    if(started){
+
+      switchTrack(current);
+
+    }
+
+  }
+
+};
+
+
+document.getElementById("prev").onclick=function(){
+
+  show(current-1);
+
+};
+
+
+document.getElementById("next").onclick=function(){
+
+  show(current+1);
+
+};
+
+
+/* FINAL BUTTON */
+
+document.addEventListener("click",function(e){
+
+  const finalButton=e.target.closest ? e.target.closest("#finalOpen") : null;
+
+  if(finalButton){
+
+    e.preventDefault();
+    e.stopPropagation();
+    openFinal();
+
+  }
+
+});
+
+
+/* =========================
+   KEYBOARD
+========================= */
+
+document.addEventListener("keydown",function(e){
+
+  if(e.key==="ArrowRight"){
+
+    show(current+1);
+
+  }
+
+  if(e.key==="ArrowLeft"){
+
+    show(current-1);
+
+  }
+
+});
+
+
+/* =========================
+   MOBILE SWIPE
+========================= */
+
+let startX=0;
+
+document.addEventListener(
+  "touchstart",
+  function(e){
+
+    startX=e.changedTouches[0].screenX;
+
+  },
+  {passive:true}
+);
+
+
+document.addEventListener(
+  "touchend",
+  function(e){
+
+    const endX=e.changedTouches[0].screenX;
+
+    const difference=endX-startX;
+
+    if(Math.abs(difference)>60){
+
+      if(difference<0){
+
+        show(current+1);
+
+      }else{
+
+        show(current-1);
+
+      }
+
+    }
+
+  },
+  {passive:true}
+);
+
+
+/* =========================
+   SPARKLES
+========================= */
+
+for(let i=0;i<28;i++){
+
+  const star=document.createElement("i");
+
+  star.style.left=(Math.random()*100)+"%";
+
+  star.style.animationDelay=(Math.random()*7)+"s";
+
+  star.style.animationDuration=(5+Math.random()*6)+"s";
+
+  document.getElementById("sparkles").appendChild(star);
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+makePages();
+
+document.getElementById("prev").disabled=true;
+
+</script>
+
+</body>
+</html>
